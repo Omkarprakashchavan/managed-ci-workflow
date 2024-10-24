@@ -23,7 +23,7 @@ import json
 
 api_url = 'https://api.github.com/graphql'
 github_token = os.environ['GITHUB_APP_TOKEN']
-organisation = 'githubactions-omkar'
+organisation = 'Omkarprakashchavan'
 repositories = []
 headers = {
     'Authorization': f'Bearer {github_token}',
@@ -88,7 +88,7 @@ def main(module_name='', module_description='', repositories=[], default_managed
 def process_all_repo(module_name='', module_description='', repositories=[], default_managed_refspec=None):
     """This Function processes all the repos passed to the function"""
     if not 'ORG_NAME' in os.environ:
-        org_name='githubactions-omkar'
+        org_name='Omkarprakashchavan'
     else:
         org_name=os.environ['ORG_NAME']
     global managed_ci_workflow_repo
@@ -103,7 +103,7 @@ def process_all_repo(module_name='', module_description='', repositories=[], def
     logger = mu.get_logger('workflow-deployer', f'{logdir}/workflow-deployer.log', level='debug', output_to_console=True)
     gh_obj = GitHubAPIs(org_name=org_name, token=app_token, logger=logger)
     # org_repos : List[str] = gh_obj.get_repo_names_in_org()
-    org_repos = ['repo-1', 'repo-2', 'repo-3', 'managed-ci-workflow', 'repo-4']
+    org_repos = ['tarun-repo-1', 'tarun-repo-2', 'tarun-repo-3', 'managed-ci-workflow']
 
     logger.debug(f'Final list of Repos in the glcp org')
 
@@ -138,7 +138,7 @@ def process_all_repo(module_name='', module_description='', repositories=[], def
         # Retieve workflows from manifest file.
         clone_status = git_clone(org_name, managed_ci_workflow_repo, app_token, refspec=refspec, directory=r)
         if not clone_status:
-            logger.error(f'Failed to clone {r} repositoroy for tag {refspec}. Hence skipping it...')
+            logger.error(f'Failed to clone {r} repository for tag {refspec}. Hence skipping it...')
             continue
         versioned_ci_repo = f'{os.path.dirname(__file__)}/../../{r}/{managed_ci_workflow_repo}'
         versioned_ci_repo = os.path.abspath(versioned_ci_repo)
@@ -580,11 +580,9 @@ def update_log_file(new_deploys, old_deploys, report_filename=f'devops-reports/w
 def get_config(item='', data_type=any):
     '''This function checks if requested item exists in deployer-config.yaml or not'''
     # Read the YAML configuration file
-    print(f'Inside the get_confi function')
-    deployer_config_path = f'{os.path.dirname(__file__)}/../deployer-config.yaml'
+    deployer_config_path = os.path.abspath(f'{os.path.dirname(__file__)}/../deployer-config.yaml')
     with open(deployer_config_path, "r") as config_file:
         config = yaml.safe_load(config_file)
-        print(config, item, data_type)
     try:
         item = config[item]
     except KeyError:
